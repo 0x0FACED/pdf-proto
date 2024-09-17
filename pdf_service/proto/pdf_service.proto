@@ -13,6 +13,7 @@ message ConvertToPDFRequest {
     int64 user_id = 1;
     string original_url = 2;
     string description = 3;
+    double scale = 4;
 }
 
 message ConvertToPDFResponse {
