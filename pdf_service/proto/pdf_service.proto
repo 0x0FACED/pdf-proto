@@ -7,6 +7,8 @@ option go_package = "/gen";
 service PDFService {
     rpc ConvertToPDF(ConvertToPDFRequest) returns (ConvertToPDFResponse);
     rpc GetSavedPDF(GetSavedPDFRequest) returns (GetSavedPDFResponse);
+    rpc DeletePDF(DeletePDFRequest) returns (DeletePDFResponse);
+    rpc DeleteAllPDF(DeleteAllPDFRequest) returns (DeleteAllPDFResponse);
 }
 
 message ConvertToPDFRequest {
@@ -19,13 +21,32 @@ message ConvertToPDFRequest {
 message ConvertToPDFResponse {
     bytes pdf_data = 1;
     string filename = 2;
+    bool from_cache = 3;
 }
 
 message GetSavedPDFRequest {
-    string description = 1;
+    int64 user_id = 1;
+    string description = 2;
 }
 
 message GetSavedPDFResponse {
     bytes pdf_data = 1;
     string filename = 2;
+}
+
+message DeletePDFRequest {
+    int64 user_id = 1;
+    string description = 2;
+}
+
+message DeletePDFResponse {
+    string message = 1;
+}
+
+message DeleteAllPDFRequest {
+    int64 user_id = 1;
+}
+
+message DeleteAllPDFResponse {
+    string message = 1;
 }

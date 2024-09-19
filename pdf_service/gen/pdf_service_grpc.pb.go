@@ -21,6 +21,8 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	PDFService_ConvertToPDF_FullMethodName = "/pdfservice.PDFService/ConvertToPDF"
 	PDFService_GetSavedPDF_FullMethodName  = "/pdfservice.PDFService/GetSavedPDF"
+	PDFService_DeletePDF_FullMethodName    = "/pdfservice.PDFService/DeletePDF"
+	PDFService_DeleteAllPDF_FullMethodName = "/pdfservice.PDFService/DeleteAllPDF"
 )
 
 // PDFServiceClient is the client API for PDFService service.
@@ -29,6 +31,8 @@ const (
 type PDFServiceClient interface {
 	ConvertToPDF(ctx context.Context, in *ConvertToPDFRequest, opts ...grpc.CallOption) (*ConvertToPDFResponse, error)
 	GetSavedPDF(ctx context.Context, in *GetSavedPDFRequest, opts ...grpc.CallOption) (*GetSavedPDFResponse, error)
+	DeletePDF(ctx context.Context, in *DeletePDFRequest, opts ...grpc.CallOption) (*DeletePDFResponse, error)
+	DeleteAllPDF(ctx context.Context, in *DeleteAllPDFRequest, opts ...grpc.CallOption) (*DeleteAllPDFResponse, error)
 }
 
 type pDFServiceClient struct {
@@ -59,12 +63,34 @@ func (c *pDFServiceClient) GetSavedPDF(ctx context.Context, in *GetSavedPDFReque
 	return out, nil
 }
 
+func (c *pDFServiceClient) DeletePDF(ctx context.Context, in *DeletePDFRequest, opts ...grpc.CallOption) (*DeletePDFResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeletePDFResponse)
+	err := c.cc.Invoke(ctx, PDFService_DeletePDF_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *pDFServiceClient) DeleteAllPDF(ctx context.Context, in *DeleteAllPDFRequest, opts ...grpc.CallOption) (*DeleteAllPDFResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteAllPDFResponse)
+	err := c.cc.Invoke(ctx, PDFService_DeleteAllPDF_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PDFServiceServer is the server API for PDFService service.
 // All implementations must embed UnimplementedPDFServiceServer
 // for forward compatibility.
 type PDFServiceServer interface {
 	ConvertToPDF(context.Context, *ConvertToPDFRequest) (*ConvertToPDFResponse, error)
 	GetSavedPDF(context.Context, *GetSavedPDFRequest) (*GetSavedPDFResponse, error)
+	DeletePDF(context.Context, *DeletePDFRequest) (*DeletePDFResponse, error)
+	DeleteAllPDF(context.Context, *DeleteAllPDFRequest) (*DeleteAllPDFResponse, error)
 	mustEmbedUnimplementedPDFServiceServer()
 }
 
@@ -80,6 +106,12 @@ func (UnimplementedPDFServiceServer) ConvertToPDF(context.Context, *ConvertToPDF
 }
 func (UnimplementedPDFServiceServer) GetSavedPDF(context.Context, *GetSavedPDFRequest) (*GetSavedPDFResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSavedPDF not implemented")
+}
+func (UnimplementedPDFServiceServer) DeletePDF(context.Context, *DeletePDFRequest) (*DeletePDFResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeletePDF not implemented")
+}
+func (UnimplementedPDFServiceServer) DeleteAllPDF(context.Context, *DeleteAllPDFRequest) (*DeleteAllPDFResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAllPDF not implemented")
 }
 func (UnimplementedPDFServiceServer) mustEmbedUnimplementedPDFServiceServer() {}
 func (UnimplementedPDFServiceServer) testEmbeddedByValue()                    {}
@@ -138,6 +170,42 @@ func _PDFService_GetSavedPDF_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PDFService_DeletePDF_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePDFRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PDFServiceServer).DeletePDF(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PDFService_DeletePDF_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PDFServiceServer).DeletePDF(ctx, req.(*DeletePDFRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PDFService_DeleteAllPDF_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAllPDFRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PDFServiceServer).DeleteAllPDF(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PDFService_DeleteAllPDF_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PDFServiceServer).DeleteAllPDF(ctx, req.(*DeleteAllPDFRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PDFService_ServiceDesc is the grpc.ServiceDesc for PDFService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -152,6 +220,14 @@ var PDFService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSavedPDF",
 			Handler:    _PDFService_GetSavedPDF_Handler,
+		},
+		{
+			MethodName: "DeletePDF",
+			Handler:    _PDFService_DeletePDF_Handler,
+		},
+		{
+			MethodName: "DeleteAllPDF",
+			Handler:    _PDFService_DeleteAllPDF_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
